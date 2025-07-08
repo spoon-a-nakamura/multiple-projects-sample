@@ -1,8 +1,6 @@
 {
   "rewrites": [
     { "source": "/lp/", "destination": "https://lp-project-test.vercel.app/" },
-    { "source": "/lp/:match*", "destination": "https://lp-project-test.vercel.app/:match*" },
-    { "source": "/", "destination": "https://multiple-projects-sample-t6nd.vercel.app/" },
-    { "source": "/:match*", "destination": "https://multiple-projects-sample-t6nd.vercel.app/:match*" }
+    { "source": "/lp/:match*", "destination": "https://lp-project-test.vercel.app/:match*" }
   ]
 }
