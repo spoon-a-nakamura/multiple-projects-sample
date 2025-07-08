@@ -1,29 +1,96 @@
-# Multiple Projects Proxy
+# 複数プロジェクト統合プロキシ
 
-このプロジェクトは、複数のVercelプロジェクトを同一ドメインで管理するためのプロキシプロジェクトです。
+異なる開発・管理チームが作成するWebサイトを、1つのドメイン下で統合して運用するためのNext.jsプロキシプロジェクト（のサンプル）です。
 
-## 設定
+## 📖 概要
 
-`vercel.json`で以下のように設定されています：
+このプロジェクトは以下のような課題を解決します：
 
-- `/lp/` → `https://lp-project.vercel.app/`
-- `/lp/*` → `https://lp-project.vercel.app/*`
-- `/` → `https://main-site.vercel.app/`
-- `/*` → `https://main-site.vercel.app/*`
+- **複数チームでの開発**: A社がメインサイト、B社がランディングページを開発する場合
+- **ドメインの統一**: ユーザーには1つのドメインとして見せたい
+- **独立したデプロイ**: 各プロジェクトは独立してデプロイ・更新可能
 
-## デプロイ手順
+## 🏗️ アーキテクチャ
 
-1. Vercelアカウントにログイン
-2. このリポジトリをVercelにデプロイ
-3. カスタムドメインを設定
-4. `main-site.vercel.app`と`lp-project.vercel.app`を実際のプロジェクトURLに変更
+```
+yourdomain.com/
+├── /          → メインサイト (A社管理)
+├── /about/    → メインサイト (A社管理)
+└── /lp/       → ランディングページ (B社管理)
+    └── /lp/*  → ランディングページのサブパス
+```
 
-## 確認方法
+## 🚀 セットアップ手順
 
-- `https://yourdomain.com/` → メインサイト
-- `https://yourdomain.com/lp/` → LPサイト
+### 1. 依存関係のインストール
 
-## 注意点
+```bash
+npm install
+```
 
-- 外部URLへのrewritesが正常に動作するかテストが必要
-- プランによる制限があるかもしれません
+### 2. 開発サーバーの起動
+
+```bash
+npm run dev
+```
+
+### 3. プロダクション環境での確認
+
+```bash
+npm run build
+npm start
+```
+
+## ⚙️ 設定
+
+### プロキシ設定 (`vercel.json`)
+
+現在の設定では以下のルーティングが行われます：
+
+```json
+{
+  "rewrites": [
+    { "source": "/lp/", "destination": "https://lp-project-test.vercel.app/" },
+    { "source": "/lp/:match*", "destination": "https://lp-project-test.vercel.app/:match*" }
+  ]
+}
+```
+
+### カスタマイズ方法
+
+1. **メインサイトの変更**: `app/page.tsx`を編集
+2. **プロキシ先URLの変更**: `vercel.json`の`destination`を実際のデプロイ先URLに変更
+3. **新しいルートの追加**: `vercel.json`に新しいrewriteルールを追加
+
+## 📦 含まれる技術スタック
+
+- **Next.js 14.0.0**:
+- **TypeScript**:
+- **Vercel**:
+
+## 🌐 デプロイ
+
+詳細なデプロイ手順については [`DEPLOY_INSTRUCTIONS.md`](./DEPLOY_INSTRUCTIONS.md) をご参照ください。
+
+## 🔍 動作確認
+
+デプロイ後、以下のURLで動作を確認できます：
+
+- `https://yourdomain.com/` → メインサイト表示
+- `https://yourdomain.com/lp/` → ランディングページへプロキシ
+
+## ⚠️ 注意事項
+
+- **Vercelプランの制限**: 外部URLへのrewritesはVercelのプランによって制限される場合があります
+- **CORS設定**: プロキシ先のサイトがCORS制限を設けている場合は追加設定が必要です
+- **パフォーマンス**: プロキシ経由のため、直接アクセスより若干の遅延が発生する可能性があります
+
+## 🤝 開発チーム向け情報
+
+### メインサイト開発者（A社）
+- `app/`ディレクトリ内のファイルを編集
+- 通常のNext.jsプロジェクトとして開発可能
+
+### ランディングページ開発者（B社）
+- 独立したプロジェクトとして開発
+- `/lp/`パスでアクセスされることを考慮してルーティングを設計
