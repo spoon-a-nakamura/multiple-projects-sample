@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/lp/", "destination": "https://lp-project.vercel.app/" },
+    { "source": "/lp/:match*", "destination": "https://lp-project.vercel.app/:match*" },
+    { "source": "/", "destination": "https://main-site.vercel.app/" },
+    { "source": "/:match*", "destination": "https://main-site.vercel.app/:match*" }
+  ]
+}
